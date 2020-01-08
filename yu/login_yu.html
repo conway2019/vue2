@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <div>
+        <p v-if="currentUser!=null">欢迎:{{currentUser.uname}},<a @click.prevent="currentUser=null" href=" ">退出登录</a></p>
+        <p v-else>
+            <a @click="showLoginForm" href="#">请登录</a>
+        </p>
+    </div>
+    <div v-show="show">
+        <form @submit.prevent="login" action="#">
+            <input type="text" ref="uname">
+            <input type="password" ref="password">
+            <input type="submit">
+        </form>
+    </div>
+</div>
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            url: "http://localhost:3000/users",
+            currentUser: null,
+            show: false,
+            users: []
+        },
+        created() {
+            fetch(this.url, {type: "GET"})
+                .then(res => res.json())
+                .then(us => this.users = us)
+        },
+        methods: {
+            showLoginForm() {
+                this.show = true
+            },
+            login() {
+                let uname = this.$refs.uname.value;
+                let psd = this.$refs.password.value;
+                let index = this.users.findIndex(item => item.uname === uname && item.password == psd)
+                if (index >= 0) {
+                    this.currentUser = {uname: this.users[index].uname}
+                    this.show = false
+                }
+            }
+        }
+    })
+</script>
+</body>
+</html>

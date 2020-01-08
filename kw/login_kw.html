@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <p v-if="currentUser!=null">欢迎{{currentUser}}，<a @click.prevent="reset" href="">退出登录</a></p>
+    <p v-else><a @click.prevent="showLoginForm" href="#">请登录</a></p>
+    <div v-show="show">
+        <form @submit.prevent="login" action="#">
+            <p>用户名：<input type="text" ref="username"></p>
+            <p>密码：<input type="password" ref="password"></p>
+            <p><input type="submit" value="登录"></p>
+        </form>
+    </div>
+</div>
+<script>
+    let app = new Vue({
+        el: "#app",
+        data: {
+            url: "http://localhost:3000/users",
+            currentUser: null,
+            show: false,
+            users: []
+        },
+        created() {
+            fetch(this.url, {type: "GET"})
+                .then(res => res.json())
+                .then(data => this.users = data)
+        },
+        methods: {
+            showLoginForm() {
+                this.show = true;
+            },
+            login() {
+                 let username = this.$refs.username.value;
+                let password = this.$refs.password.value;
+                let index = this.users.findIndex(item => item.uname == username && item.password == password);
+                if (index >= 0) {
+                    this.currentUser = this.users[index].uname;
+                    this.show = false;
+                } else {
+                    alert("用户名密码错误！");
+                    this.reset();
+                }
+            },
+            reset(){
+                this.currentUser=null;
+                this.$refs.username.value="";
+                this.$refs.password.value="";
+            }
+        }
+    })
+</script>
+</body>
+</html>

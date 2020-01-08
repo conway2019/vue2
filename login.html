@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        用户名：<input name="userName" ref="userName"><br>
+        密码：<input name="password" ref="password"><br>
+        <div>
+            <button @click="login">登录</button>
+        </div>
+    </div>
+<script>
+
+    new Vue({
+        el: '#app',
+        data: {
+            user: {}
+        },
+        created() {
+            window.fetch('https://api.myjson.com/bins/k1gy8', {type: "GET"})
+                .then(res => res.json())
+                .then(da => this.user = da)
+        },
+        methods: {
+            login(){
+                let userName = this.$refs.userName.value;
+                let password = this.$refs.password.value;
+    console.log(this.user);
+            }
+        }
+    })
+</script>
+</body>
+</html>

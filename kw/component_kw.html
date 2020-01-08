@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <todo-item></todo-item>
+    <sub-component1></sub-component1>
+</div>
+<script>
+    let sub1 = {};
+    Vue.component("todo-item", {
+        template: "<div>大家好我是vue的component组件</div>"
+    });
+    let app = new Vue({
+        el: "#app"，
+        data:{
+
+        },
+        components:{
+            'sub-component1': sub1
+        }
+    })
+</script>
+</body>
+</html>

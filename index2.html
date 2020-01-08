@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+</head>
+<body>
+<div id="app">
+
+    <sub-component1 :user="user"></sub-component1>
+    <sub-component2 @onsend="sendProcess"></sub-component2>
+</div>
+
+<script id="sub2" type="text/x-template">
+    <div>
+        <h1>{{subTitle}}</h1>
+        <button @click="sendMsg">send message</button>
+
+    </div>
+</script>
+
+<script>
+    let subCom2 = {
+        template: '#sub2',
+        data() {
+            return {subTitle: "this is sub2"}
+        },
+        methods: {
+            sendMsg() {
+                this.$emit('onsend', this.subTitle)
+            }
+        }
+    }
+
+
+    Vue.component('sub-component1', {
+        template:
+            `<div>
+                    <h1>sub1</h1>
+                    <h3>{{user.id}},{{user.name}}</h3>
+                </div>`,
+        // props:['user']
+        props: {
+            'user': {type: Object, required: true}
+        }
+    })
+    new Vue({
+        el: '#app',
+        data: {
+            user: {}
+        },
+        components: {
+            'sub-component2': subCom2
+        },
+        methods: {
+            sendProcess(msg) {
+                alert(msg)
+            }
+        },
+        created() {
+
+            window.fetch('https://api.myjson.com/bins/vemw0', {type: "GET"})
+                .then(res => res.json())
+                .then(da => this.user = da)
+        }
+    })
+
+</script>
+
+</body>
+</html>

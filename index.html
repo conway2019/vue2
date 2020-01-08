@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <style type="text/css">
+        .active {
+            color: red;
+        }
+
+        .warn {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    {{title|toUpper}},
+    {{new Date()|dateFormat}}
+    <h1 v-john></h1>
+    <br>
+    <p :name="p" :class="{active:isActive,warn:isWarn}" :style='{"font-size":"30px"}'>pp !</p>
+    <span v-html="title"></span>
+    <h2 v-if="a==1">a=1</h2>
+    <h2 v-else-if="a==2">a=2</h2>
+    <h2 v-else>a=other</h2>
+    <h2 v-show="isShow">show</h2>
+
+    <ul>
+        <template v-for="(fav,index) of favs" :key="fav.id">
+            <li v-if="fav.id%2==0">{{fav.type}},{{fav.id}}
+                <button @click="ok($event,fav)">test</button>
+            </li>
+        </template>
+    </ul>
+    <form action="#">
+        <input type="text" ref="uname">
+        <input type="text" v-model="age" @input="age=$refs.age.value" ref="age" :value="age">{{age}}<br>
+        <input type="radio" name="fav" value="foot" v-model="fav">
+        <input type="radio" name="fav" value="basket" v-model="fav">
+        {{fav}}
+        <br>
+
+        <input type="checkbox" name="favs" v-model="favs1" value="basket">
+        <input type="checkbox" name="favs" v-model="favs1" value="foot">
+        <input type="checkbox" name="favs" v-model="favs1" value="swim">
+        {{favs1}}
+        <br>
+
+        <select v-model="favs1" multiple :style="{width:'100px'}">
+            <option value="basket">basket ball</option>
+            <option value="foot">foot ball</option>
+            <option value="swim">swim</option>
+        </select>
+        {{favs1}}
+        <br>
+        <button @click.once="submit">submit</button>
+
+        <h1>{{x}}</h1>
+    </form>
+
+</div>
+
+<script>
+
+    Vue.filter('dateFormat', function (val) {
+        let f = val.getFullYear() + "年" + (val.getMonth() + 1) + "月" + val.getDate()
+        return f;
+    })
+    Vue.directive('john', {
+        // 当被绑定的元素插入到 DOM 中时……
+        inserted: function (el) {
+            el.innerHTML = "John is good man"
+        }
+    })
+    let opt = {
+        el: '#app',
+        data: {
+            title: "<h1>hello</h1>",
+            p: 'p1',
+            isActive: true,
+            isWarn: true,
+            a: 1,
+            isShow: true,
+            favs: [{id: 3, type: "basket"}, {id: 4, type: "football"}],
+            favs1: ['basket', 'foot'],
+            age: 100,
+            fav: 'basket',
+            m: 1,
+            n: 2,
+            // x:3
+        },
+        // watch:{
+        //    m:function (newValue,oldValue) {
+        //         this.x=this.n+newValue
+        //    },
+        //     n:function (newValue,oldValue) {
+        //         this.x=this.m+newValue
+        //     }
+        // },
+
+        computed: {
+            x() {
+                return this.m + this.n
+            }
+        },
+        methods: {
+            ok(event, fav) {
+                alert(event.target)
+                alert(fav.type)
+            },
+            submit(event) {
+                //event.preventDefault();
+                alert(this.$refs.uname.value)
+            }
+        },
+        filters: {
+            toUpper(val) {
+                return val.toUpperCase();
+            }
+        }
+    }
+    //MV VM
+    var app = new Vue(opt)
+
+</script>
+</body>
+</html>
